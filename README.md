@@ -1,5 +1,5 @@
 # SmartLook-
-Bloqueador de aplicativos open source dinâmico por meio de reconhecimento de íris.
+# # Bloqueador de aplicativos open source dinâmico por meio de reconhecimento de íris.
 Autores: Pamella Baranoski Clos.
 Co-autores: Odair Moreira de Souza, Flávio Endrigo Cechim
 
