@@ -1,13 +1,13 @@
 import 'dart:convert';
+import 'dart:html';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pfc/ui/theme.dart';
-
-
-
+import 'package:pfc/user_page.dart';
 
 class AddIrisPage extends StatefulWidget {
   const AddIrisPage({Key? key}) : super(key: key);
@@ -19,9 +19,10 @@ class AddIrisPage extends StatefulWidget {
 class _AddIrisPageState extends State<AddIrisPage> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   ImagePicker imagePicker = ImagePicker();
-  XFile? imagemCamera;
+  File? imagemCamera;
   Uri url = Uri.https("lacus-8cf38-default-rtdb.europe-west1.firebasedatabase", "/db");
-  //TextEditingController _controller = TextEditingController();
+
+
 
   @override
   void initState() {
@@ -45,9 +46,11 @@ class _AddIrisPageState extends State<AddIrisPage> with SingleTickerProviderStat
           child: ListView(
             children: [
               SizedBox(height: 1),
-              getImageIris()
+              getImageIris(),
+              imageReturnConta()
               //Divider(height: 20,thickness: 1)
             ],
+
           )
       ),
     );
@@ -62,7 +65,6 @@ class _AddIrisPageState extends State<AddIrisPage> with SingleTickerProviderStat
         //quando a lua for tocada faz:
         onTap: (){
           Get.back();
-
         },
         child: Icon(Icons.arrow_back_ios,
             size: 20,
@@ -74,19 +76,31 @@ class _AddIrisPageState extends State<AddIrisPage> with SingleTickerProviderStat
 
 
   }
-
   getImageIris() async {
-        final ImagePicker _picker = ImagePicker();
-        final img =
-        await _picker.pickImage(source: ImageSource.camera);
-        setState(() {
-          imagemCamera = img;
-        });
-
+      try {
+        final imageCamera = await ImagePicker().pickImage(source: ImageSource.camera);
+        if(imageCamera == null) return;
+      } on PlatformException catch(e) {
+        print('Falha ao capturar imagem: $e');
       }
+      //add os bytes no banco de dados
+    }
 
-
-
-
+    imageReturnConta(){
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => UserPage(),
+        ),
+            (route) => false,
+      );
+    }
 }
+
+
+
+
+
+
+
+
 

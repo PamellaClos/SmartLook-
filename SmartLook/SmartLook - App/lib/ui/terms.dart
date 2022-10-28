@@ -19,7 +19,9 @@ class Termos extends StatefulWidget {
 
 class _TermosState extends State<Termos> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  Uri url = Uri.https("lacus-8cf38-default-rtdb.europe-west1.firebasedatabase.app", "/db/.json");
+  Uri url = Uri.https(
+      "lacus-8cf38-default-rtdb.europe-west1.firebasedatabase.app",
+      "/db/.json");
 
   @override
   void initState() {
@@ -36,27 +38,31 @@ class _TermosState extends State<Termos> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff040f15),  //
+      backgroundColor: Color(0xff040f15), //
       body: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 70),
-
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 70, bottom: 12),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: Text(
-                  "Termos",
-                  style: logTherms,
-                ),
-                padding:EdgeInsets.only(top:10, bottom: 30, left: 105),
-              ),
+                  padding: EdgeInsets.only(bottom: 60),
+                alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Termos",
+                        style: logTherms,
+                      ),
+                      Image(image: AssetImage('assets/images/termos3.png'), width: 250),
+                    ],
+                  )),
               Container(
                 child: Text(
                   "Termos de segurança",
                   style: headingStyle,
                 ),
-                padding: EdgeInsets.only(left: 10, top: 400, bottom: 10),
+                padding: EdgeInsets.only(left: 10, top: 30, bottom: 10),
               ),
               Container(
                 child: Text(
@@ -69,9 +75,10 @@ class _TermosState extends State<Termos> with SingleTickerProviderStateMixin {
                 padding: EdgeInsets.only(top: 50),
                 child: Row(
                   children: [
-                    MyButtonTerms(label: "         Começar", onTap: ()=>Get.to(HomePage()))
+                    MyButtonTerms(
+                        label: "         Começar",
+                        onTap: () => Get.to(HomePage()))
                     //MyButtonTerms(label: "Começar", onTap: _Post)
-
                   ],
                 ),
               )
@@ -81,5 +88,4 @@ class _TermosState extends State<Termos> with SingleTickerProviderStateMixin {
       ),
     );
   }
-
 }

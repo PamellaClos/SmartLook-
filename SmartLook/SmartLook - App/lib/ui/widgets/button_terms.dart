@@ -20,7 +20,7 @@ class MyButtonTerms extends StatelessWidget {
         height: 55,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: button
+
         ),
         child:
         Container(
@@ -29,6 +29,7 @@ class MyButtonTerms extends StatelessWidget {
             label,
             style: TextStyle(
               color: Colors.white,
+              fontSize: 15,
             ),
           ),
         ),

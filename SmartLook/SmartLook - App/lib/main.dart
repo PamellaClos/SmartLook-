@@ -17,14 +17,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        title: 'lacus',
+        title: 'SmartLook',
         debugShowCheckedModeBanner: false,
 
-        theme: Themes.light,
-        darkTheme: Themes.dark,
+        theme: Themes.dark,
+        darkTheme: Themes.light,
         themeMode: ThemeService().theme,
 
-        home: LoginPage()
+        home: Landing()
     );
   }
 }

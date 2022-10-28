@@ -1,75 +1,115 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pfc/ui/terms.dart';
-import 'package:pfc/ui/theme.dart';
-import 'package:pfc/ui/widgets/input_field.dart';
-import 'package:pfc/ui/widgets/input_password.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:pfc/ui/widgets/myButtonLogin.dart';
 
+
 import '../home_page.dart';
+import '../slider.dart';
 
+void main() => runApp(MyApp());
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
-
+class MyApp extends StatelessWidget {
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Landing(),
+    );
+  }
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
+class Landing extends StatefulWidget {
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
+  _LandingState createState() => _LandingState();
+}
+
+class _LandingState extends State<Landing> {
+  int _currentPage = 0;
+  PageController _controller = PageController();
+
+  List<Widget> _pages = [
+    SliderPage(
+        title: "SmartLook",
+        hello: "Olá, bom vê-lo novamente",
+        description:
+        "A segurança dos dados através do seu olhar",
+        image: " "),
+    SliderPage(
+        title: "SmartLook",
+        hello: "Since 2022. Developed Pamella ©",
+        description:
+        "",
+        image: "assets/images/iris.png"),
+  ];
+
+  _onchanged(int index) {
+    setState(() {
+      _currentPage = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff040f15),
-      body: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 70),
-
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: Text(
-                  "Lacus",
-                  style: loginTitleStyle,
+      body: Stack(
+        children: <Widget>[
+          PageView.builder(
+            scrollDirection: Axis.horizontal,
+            onPageChanged: _onchanged,
+            controller: _controller,
+            itemCount: _pages.length,
+            itemBuilder: (context, int index) {
+              return _pages[index];
+            },
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List<Widget>.generate(_pages.length, (int index) {
+                    return AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        height: 10,
+                        width: (index == _currentPage) ? 30 : 10,
+                        margin:
+                        EdgeInsets.symmetric(horizontal: 5, vertical: 30),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: (index == _currentPage)
+                                ? Colors.deepPurple
+                                : Colors.deepPurple.withOpacity(0.5)));
+                  })),
+              InkWell(
+                onTap: () {
+                  _controller.nextPage(
+                      duration: Duration(milliseconds: 800),
+                      curve: Curves.easeInOutQuint);
+                },
+                child: AnimatedContainer(
+                  alignment: Alignment.center,
+                  duration: Duration(milliseconds: 300),
+                  height: 70,
+                  width: (_currentPage == (_pages.length - 1)) ? 200 : 75,
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(35)),
+                  child: (_currentPage == (_pages.length - 1))
+                      ? MyButtonLogin(label: "Começar", onTap:()=>Get.to(HomePage()))
+                      : Icon(
+                    Icons.navigate_next,
+                    size: 50,
+                    color: Colors.white,
+                  ),
                 ),
-                padding:EdgeInsets.only(top:10, bottom: 30),
               ),
-              Container(
-                child: Text(
-                  "A segurança com a íris",
-                  style: headingStyleLogin,
-                ),
-                padding: EdgeInsets.only(left: 10, top: 400, bottom: 10),
-              ),
-              Container(
-                child: Text(
-                  "A segurança dos seus dados através do seu olhar. Um novo meio de proteger.",
-                  style: subHeadingStyle,
-                ),
-                padding: EdgeInsets.only(left: 10, bottom: 10),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 50),
-                child: Row(
-                  children: [
-                    MyButtonLogin(label: "         Começar", onTap:
-                        ()=>Get.to(Termos()))
-                  ],
-                ),
+              SizedBox(
+                height: 50,
               )
             ],
           ),
-        ),
+        ],
       ),
     );
   }

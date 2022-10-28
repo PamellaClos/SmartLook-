@@ -1,16 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:pfc/home_page.dart';
+import 'package:http/http.dart' as http;
 
-import 'appProtegido.dart';
+
 
 class App extends MaterialApp {
+  static List<AppInfo> apps = [];
 }
 
-
 class Add extends StatelessWidget {
+  Uri url = Uri.https("lacus-8cf38-default-rtdb.europe-west1.firebasedatabase.app", "/app_selecionado/.json");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +32,8 @@ class Add extends StatelessWidget {
                 itemBuilder: (context, index) {
                   AppInfo app = snapshot.data![index];
 
-              return Card(
-                color: Color(0xFF3F3F42).withOpacity(0.4),
+               return Card(
+                color: Color(0xff0b0826).withOpacity(0.4),
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: Colors.transparent,
@@ -48,8 +53,11 @@ class Add extends StatelessWidget {
                           actions: [
                             TextButton(
                                 onPressed: () {
-                                  AppInform.apps.add(app);
-                                  print(AppInform.apps);
+                                    //_Post();
+                                    App.apps.add(app);
+                                    http.post(url, body: json.encode({"app_selecionado": app.name}));
+                                    http.post(url);
+                                    print(App.apps);
                                   Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                       builder: (context) => HomePage(),
@@ -60,6 +68,7 @@ class Add extends StatelessWidget {
                                 child: Text("Sim")),
                             TextButton(
                                 onPressed: () {
+
                                   Navigator.of(context).pop();
                                 },
                                 child: Text("Não"))
@@ -101,5 +110,10 @@ class Add extends StatelessWidget {
     );
 
 
+  }
+
+  void _Post(){
+    //http.post(url, body: json.encode({"app_selecionado": ${app.name!}}));
+    //http.post(url);
   }
 }

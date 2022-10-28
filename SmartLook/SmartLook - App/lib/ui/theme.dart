@@ -7,16 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 const Color bluishClr = Color(0xFF4e5ae8);
-const Color yellowClr = Color(0xFFFFB746);
-const Color pinkClr = Color(0xFFff4667);
 const Color button = Color(0xff5b33a5);
 const Color white = Colors.white;
-const Color pickerDate =  Color(0xff4487c2);
-const Color background =  Color(0xff354da0);
 const primaryClr = bluishClr;
 const Color blackClr = Colors.black;
 const Color darkGreyrClr = Color(0xFF121212);
-Color darkHeaderClr = Colors.grey[800]!;
+
 
 class Themes{
 
@@ -29,8 +25,7 @@ class Themes{
 
 
   //tema escuro
-  static final dark= ThemeData(
-    backgroundColor: Color(0xff040f15),
+  static final dark= ThemeData(backgroundColor: Color(0xff040f15),
   primaryColor: Color(0xff040f15),
   brightness: Brightness.dark
   );
@@ -52,7 +47,7 @@ TextStyle get subHeadingStyle{
 TextStyle get logTherms{
   return GoogleFonts.lato (
       textStyle: TextStyle(
-          fontSize: 22,
+          fontSize: 28,
           fontWeight: FontWeight.bold,
           //color: Color(0xff6523ac),
         color: Color(0xff7506e3),
@@ -63,7 +58,7 @@ TextStyle get logTherms{
 TextStyle get headingStyle{
   return GoogleFonts.lato (
       textStyle: TextStyle(
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: FontWeight.bold,
         color: Get.isDarkMode?Colors.white:Colors.black
       )

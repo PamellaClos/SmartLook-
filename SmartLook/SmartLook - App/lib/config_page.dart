@@ -1,11 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pfc/ui/theme.dart';
+import 'list_apps.dart';
+import 'ui/widgets/alert_dialog/custom_dialog_idioma.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert' show utf8, base64;
+
 
 
 class Config extends StatefulWidget {
@@ -13,14 +16,17 @@ class Config extends StatefulWidget {
 
   @override
   State<Config> createState() => _UserPageState();
+
 }
 
 class _UserPageState extends State<Config> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  TextEditingController _textFieldController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
   ImagePicker imagePicker = ImagePicker();
   XFile? imagemCamera;
-  Uri url = Uri.https("lacus-8cf38-default-rtdb.europe-west1.firebasedatabase.app", "/db/.json");
+  Uri url = Uri.https("lacus-8cf38-default-rtdb.europe-west1.firebasedatabase.app", "/nome_user/.json");
+
+
 
   @override
   void initState() {
@@ -129,38 +135,44 @@ class _UserPageState extends State<Config> with SingleTickerProviderStateMixin {
 
   GestureDetector buildAlterarIrisOption(BuildContext context, String title){
     return GestureDetector(
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("Deseja cadastrar uma nova íris?")
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    getImageIris();
-                    _Post();
-                    Navigator.of(context).pop();
-                    //Navigator.push(
-                      //context,
-                     // MaterialPageRoute(builder: (context) => AddIrisPage()),
-                   // );
-                  },
-                  child: Text("Sim")),
+      onTap: () async {
+        await getImageIris();
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Informe o seu nome'),
+                content: TextField(
+                  controller: nomeController,
+                  decoration: const InputDecoration(hintText: "Nome"),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                      });
+                      Navigator.pop(context, 'OK');
+                      Get.snackbar(
+                        "De olho",
+                        "Sucesso ao adicionar íris",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Color(0xFF7B7878).withOpacity(0.6),
+                        icon: Icon(
+                          Icons.visibility_sharp,
+                          color: Color(0xff071d2a),
+                        ),
+                      );
+                      http.post(url, body: json.encode({"nome_user": nomeController.text}));
+                      http.post(url);
+                      nomes.add(nomeController.text);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
 
 
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("Não"))
-            ],
-          );
-        });
+
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -182,35 +194,13 @@ class _UserPageState extends State<Config> with SingleTickerProviderStateMixin {
     return GestureDetector(
       onTap: (){
         showDialog(context: context, builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("Deseja alterar o idioma do aplicativo para a língua inglesa?"),
-                Text(" "),
-                TextButton(
-                    onPressed: () {
-                      Get.snackbar("Idioma alterado", "Language changed!",
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Color(0xFFA2BBE5).withOpacity(0.2),
-                        icon: Icon(Icons.check,
-                          color: Colors.green,
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Sim")),
-
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Não"))
-              ],
-            ),
-          );
-        });
+            return CustomDialogIdioma(
+              title: "Language",
+              descriptions: "Deseja alterar o idioma do aplicativo?",
+              text: "Sim", img: " ",
+            );
+        }
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -232,21 +222,10 @@ class _UserPageState extends State<Config> with SingleTickerProviderStateMixin {
     return GestureDetector(
       onTap: (){
         showDialog(context: context, builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("Quando você usa nossos serviços, está confiando a nós suas informações. Entendemos que isso é uma grande responsabilidade e trabalhamos duro para proteger essas informações e colocar você no controle."),
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("Fechar"))
-            ],
+          return CustomDialogIdioma(
+            title: "Termos",
+            descriptions: "Quando você usa nossos serviços, está confiando a nós suas informações. Entendemos que isso é uma grande responsabilidade e trabalhamos duro para proteger essas informações e colocar você no controle.",
+            text: "Fechar", img: " ",
           );
         });
       },
@@ -266,8 +245,6 @@ class _UserPageState extends State<Config> with SingleTickerProviderStateMixin {
       ),
     );
   }
-
-  
 
   _appBar(BuildContext contex){
     return AppBar(
@@ -299,18 +276,11 @@ class _UserPageState extends State<Config> with SingleTickerProviderStateMixin {
       imagemCamera = img;
     });
 
-    Get.snackbar("De olho", "Sucesso ao adicionar íris!",
-      snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2, milliseconds: 500),
-      backgroundColor: Color(0xFFA2BBE5).withOpacity(0.2),
-      icon: Icon(Icons.visibility_sharp,
-        color: Color(0xFF621F7F),
-      ),
-    );
+
   }
 
-  void _Post(){
-    http.post(url, body: json.encode({"db": "imagemCamera"},));
-    //http.post(url, )
+  alertInput(){
+
   }
+
 }

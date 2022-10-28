@@ -18,16 +18,16 @@ class MyButtonLogin extends StatelessWidget {
         width: 125,
         height: 55,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: button
+            borderRadius: BorderRadius.circular(15),
         ),
         child:
         Container(
-          margin: const EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.only(top: 20, left: 30),
           child: Text(
             label,
             style: TextStyle(
               color: Colors.white,
+              fontSize: 16,
             ),
           ),
         ),
